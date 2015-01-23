@@ -160,7 +160,7 @@ public class Park {
                 System.out.println("no change");
             }
             curstate = parkString();
-            System.out.println(parkString());
+            //System.out.println(parkString());
             int k = 0;
         }
 
