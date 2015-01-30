@@ -23,8 +23,8 @@ public class Group {
         tiles.add(tile);
     }
 
-    public int getId(){
-        return this.id;
+    public int numTiles(){
+        return this.tiles.size();
     }
 
     public void initTrial(){

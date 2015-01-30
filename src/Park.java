@@ -65,20 +65,23 @@ public class Park {
 
     public String solve(){
 
-        Group[] groupArray = new Group[groups.values().size()];
+        ArrayList<Group> groupList = new ArrayList();
 
         int i=0;
         for(Group group : groups.values()) {
+            int j=0;
+            while(j < groupList.size() && groupList.get(j).numTiles() < group.numTiles()){
+                j++;
+            }
             group.initTrial();
-            groupArray[i] = group;
-            i++;
+            groupList.add(j, group);
         }
 
         if (solved()){
             return parkString();
         }
 
-        return runAllPossible(groupArray, 0);
+        return runAllPossible(groupList, 0);
 
     }
 
@@ -126,50 +129,50 @@ public class Park {
         return true;
     }
 
-    private String runAllPossible(Group[] groupArray, int depth){
+    private String runAllPossible(ArrayList<Group> groupList, int depth){
 
         while (true) {
 
-            if (depth == groupArray.length - 1) {
-                while (groupArray[depth].nextPossibility(tiles)) {
+            if (depth == groupList.size() - 1) {
+                while (groupList.get(depth).nextPossibility(tiles)) {
                     if (solved()) {
                         return parkString();
                     }
                 }
-                groupArray[depth].initTrial();
+                groupList.get(depth).initTrial();
                 depth--;
             } else if (depth == -1) {
                 return "unsolvable";
             } else {
-                if (groupArray[depth].nextPossibility(tiles)) {
-                    if (possibilitiesRemain(groupArray, depth)){
+                if (groupList.get(depth).nextPossibility(tiles)) {
+                    if (possibilitiesRemain(groupList, depth)){
                         depth++;
-                        System.out.println("more possibs");
+                        //System.out.println("more possibs");
                     }
                     else{
-                        System.out.println("staying");
+                        //System.out.println("staying");
                     }
                 }
                 else {
-                    groupArray[depth].initTrial();
+                    groupList.get(depth).initTrial();
                     depth--;
-                    System.out.println("dead end");
+                    //System.out.println("dead end");
                 }
             }
-            if (curstate.equals(parkString())){
-                System.out.println("no change");
-            }
-            curstate = parkString();
+//            if (curstate.equals(parkString())){
+//                System.out.println("no change");
+//            }
+            //curstate = parkString();
             //System.out.println(parkString());
             int k = 0;
         }
 
     }
 
-    public boolean possibilitiesRemain(Group[] group, int depth) {
+    public boolean possibilitiesRemain(ArrayList<Group> groups, int depth) {
         boolean morePossibilities = true;
-        for (int i=depth+1; i<group.length; i++){
-            morePossibilities &= group[i].twoTreesPossible(tiles);
+        for (int i=depth+1; i<groups.size(); i++){
+            morePossibilities &= groups.get(i).twoTreesPossible(tiles);
         }
 
         return morePossibilities;
